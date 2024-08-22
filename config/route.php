@@ -17,4 +17,4 @@ use Webman\Route;
 // 禁用路由
 Route::disableDefaultRoute();
 
-Route::any('/{username:\w+}.png', [app\controller\IndexController::class, 'index']);
+Route::any('/{username:\w+}.png', [app\controller\ApiController::class, 'index']);
