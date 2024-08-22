@@ -1,6 +1,6 @@
 <?php
 return [
-    'default' => 'file',
+    'default' => 'redis',
     'stores' => [
         'file' => [
             'type' => 'File',
@@ -15,7 +15,7 @@ return [
             'type' => 'redis',
             'host' => '127.0.0.1',
             'port' => 6379,
-            'prefix' => '',
+            'prefix' => 'linux-do-card_',
             'expire' => 0,
         ],
     ],
