@@ -13,6 +13,7 @@ class ApiController
 {
     public function index(Request $request, string $username): Response
     {
+        $theme = input('theme', 'dark');
         //获取用户数据
         if (empty($data = Cache::get("user_data_{$username}"))) {
             $json = QueryList::get("https://linux.do/u/{$username}/summary.json")->getHtml();
@@ -48,6 +49,12 @@ class ApiController
         $bg_color = imagecolorallocate($image, 34, 34, 34);
         //设置文字颜色
         $color = imagecolorallocate($image, 221, 221, 221);
+
+        if ($theme == 'light') {
+            $bg_color = imagecolorallocate($image, 255, 255, 255);
+            $color = imagecolorallocate($image, 34, 34, 34);
+        }
+
         //设置字体
         $font = base_path('./public/assets/fonts/bb4171.ttf');
         //填充背景
