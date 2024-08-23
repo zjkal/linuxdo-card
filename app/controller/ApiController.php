@@ -42,6 +42,11 @@ class ApiController
                 'solved_count'     => $summary['user_summary']['solved_count'] ?? '',
             ];
 
+            //过滤签名中的HTML标签
+            $data['bio_excerpt'] = strip_tags($data['bio_excerpt']);
+            //过滤换行
+            $data['bio_excerpt'] = str_replace(["\r", "\n"], '', $data['bio_excerpt']);
+
             //缓存数据
             Cache::set("user_data_{$username}", $data, 600);
         }
