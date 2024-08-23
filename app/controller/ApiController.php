@@ -70,7 +70,7 @@ class ApiController
 
         //写入基本信息
         imagefttext($image, 18, 0, 30, 50, $color, $font, $data['username'] . ' (' . get_level_name($data['trust_level']) . ')');
-        imagefttext($image, 14, 0, 30, 80, $color, $font, mb_strimwidth($data['bio_excerpt'], 0, 32, '...'));
+        imagefttext($image, 14, 0, 30, 80, $color, $font, mb_strimwidth($data['bio_excerpt'], 0, 42, '...'));
         imagefttext($image, 12, 0, 30, 110, $color, $font, '注册时间');
         imagefttext($image, 12, 0, 330, 110, $color, $font, '最近上线');
         imagefttext($image, 12, 0, 150, 110, $color, $font, TimeHelper::toFriendly(TimeHelper::toTimestamp($data['created_at'])));
