@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 600 300">
+    <defs>
+        <style>
+            svg {background-color: {{ bg_color }}; }
+            #info .text { font-size: 12px; fill: {{ color }}; font-weight: lighter; }
+            #summary .text { font-size: 12px; fill: {{ color }}; font-weight: lighter; }
+        </style>
+    </defs>
+    <g id="info">
+        <text class="text" transform="translate(30 50)">{{ data['username'] }} ({{ data['trust_level'] }})</text>
+        <text class="text" transform="translate(30 80)">{{ data['bio_excerpt'] }}</text>
+        <text class="text" transform="translate(30 110)">🕒注册时间</text>
+        <text class="text" transform="translate(330 110)">🕗最近上线</text>
+        <text class="text" transform="translate(150 110)">{{ data['created_at'] }}</text>
+        <text class="text" transform="translate(450 110)">{{ data['last_seen_at'] }}</text>
+    </g>
+    <line x1="30" y1="135" x2="570" y2="135" stroke="{{ color }}" stroke-width="1" />
+    <g id="summary">
+        <text class="text" transform="translate(30 180)">🛎️访问天数</text>
+        <text class="text" transform="translate(30 210)">⌛阅读时间</text>
+        <text class="text" transform="translate(30 240)">📰浏览话题</text>
+        <text class="text" transform="translate(30 270)">📑已读帖子</text>
+        <text class="text" transform="translate(330 180)">💝已送出赞</text>
+        <text class="text" transform="translate(330 210)">👍已收到赞</text>
+        <text class="text" transform="translate(330 240)">📖创建帖子</text>
+        <text class="text" transform="translate(330 270)">💡解决方案</text>
+        <text class="text" transform="translate(150 180)">{{ data['days_visited'] }}</text>
+        <text class="text" transform="translate(150 210)">{{ data['time_read'] }}</text>
+        <text class="text" transform="translate(150 240)">{{ data['topics_entered'] }}</text>
+        <text class="text" transform="translate(150 270)">{{ data['posts_read_count'] }}</text>
+        <text class="text" transform="translate(450 180)">{{ data['likes_given'] }}</text>
+        <text class="text" transform="translate(450 210)">{{ data['likes_received'] }}</text>
+        <text class="text" transform="translate(450 240)">{{ data['post_count'] }}</text>
+        <text class="text" transform="translate(450 270)">{{ data['solved_count'] }}</text>
+    </g>
+</svg>

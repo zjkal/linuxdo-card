@@ -18,3 +18,4 @@ use Webman\Route;
 Route::disableDefaultRoute();
 Route::any('/', [app\controller\IndexController::class, 'index']);
 Route::any('/{username:[a-zA-Z0-9._-]+}.png', [app\controller\ApiController::class, 'index']);
+Route::any('/{username:[a-zA-Z0-9._-]+}.svg', [app\controller\ApiController::class, 'v2']);

@@ -88,7 +88,7 @@
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span>效果预览</span>
                 </h4>
-                <img id="card-preview" src="/zjkal.png" alt="preview">
+                <img id="card-preview" src="/zjkal.svg" alt="preview">
             </div>
             <div class="col-md-7 col-lg-8">
                 <form class="needs-validation" novalidate>
@@ -152,8 +152,8 @@
                 username.next('.invalid-feedback').show();
                 return;
             }
-            img.attr('src', '').attr('src', baseUrl + username.val() + '.png?' + 'theme=' + theme.val());
-            url.val(baseUrl + username.val() + '.png?' + 'theme=' + theme.val());
+            img.attr('src', '').attr('src', baseUrl + username.val() + '.svg?' + 'theme=' + theme.val());
+            url.val(baseUrl + username.val() + '.svg?' + 'theme=' + theme.val());
         });
     });
 </script>

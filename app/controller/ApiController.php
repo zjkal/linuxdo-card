@@ -2,54 +2,23 @@
 
 namespace app\controller;
 
+use app\service\UserService;
 use Intervention\Image\ImageManagerStatic as Image;
-use QL\QueryList;
 use support\Request;
 use support\Response;
-use think\facade\Cache;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 use zjkal\TimeHelper;
 
 class ApiController
 {
     public function index(Request $request, string $username): Response
     {
+        //获取主题参数
         $theme = input('theme', 'dark');
-        //获取用户数据
-        if (empty($data = Cache::get("user_data_{$username}"))) {
-            dump($data);
-            $json = QueryList::get("https://linux.do/u/{$username}/summary.json")->getHtml();
-            $summary = json_decode($json, true);
-            dump($summary);
 
-            $json = QueryList::get("https://linux.do/u/{$username}.json")->getHtml();
-            $user = json_decode($json, true);
-            dump($user);
-
-            //收集数据
-            $data = [
-                'username'         => $user['user']['username'] ?? '',
-                'trust_level'      => $user['user']['trust_level'] ?? '',
-                'created_at'       => $user['user']['created_at'] ?? '',
-                'last_seen_at'     => $user['user']['last_seen_at'] ?? '',
-                'bio_excerpt'      => $user['user']['bio_excerpt'] ?? '',
-                'days_visited'     => $summary['user_summary']['days_visited'] ?? '',
-                'time_read'        => $summary['user_summary']['time_read'] ?? '',
-                'topics_entered'   => $summary['user_summary']['topics_entered'] ?? '',
-                'posts_read_count' => $summary['user_summary']['posts_read_count'] ?? '',
-                'likes_given'      => $summary['user_summary']['likes_given'] ?? '',
-                'likes_received'   => $summary['user_summary']['likes_received'] ?? '',
-                'post_count'       => $summary['user_summary']['post_count'] ?? '',
-                'solved_count'     => $summary['user_summary']['solved_count'] ?? '',
-            ];
-
-            //过滤签名中的HTML标签
-            $data['bio_excerpt'] = strip_tags($data['bio_excerpt']);
-            //过滤换行
-            $data['bio_excerpt'] = str_replace(["\r", "\n"], '', $data['bio_excerpt']);
-
-            //缓存数据
-            Cache::set("user_data_{$username}", $data, 600);
-        }
+        //获取用户信息
+        $data = UserService::getUserInfo($username);
 
         //创建图片
         $image = imagecreate(600, 300);
@@ -101,5 +70,53 @@ class ApiController
 
         $image = Image::make($image);
         return response($image->encode('png'), 200, ['Content-Type' => 'image/png']);
+    }
+
+    public function v2(Request $request, string $username): Response
+    {
+        //获取主题参数
+        $theme = input('theme', 'dark');
+
+        //获取用户信息
+        $data = UserService::getUserInfo($username);
+
+        //处理基本信息
+        $data['bio_excerpt'] = mb_strimwidth($data['bio_excerpt'], 0, 55, '...');
+        $data['trust_level'] = get_level_name($data['trust_level']);
+        $data['created_at'] = TimeHelper::toFriendly(TimeHelper::toTimestamp($data['created_at']));
+        $data['last_seen_at'] = TimeHelper::toFriendly(TimeHelper::toTimestamp($data['last_seen_at']));
+
+        //处理数据
+        $data['days_visited'] = num2friendly($data['days_visited']);
+        $data['time_read'] = round($data['time_read'] / 3600, 1) . ' 小时';
+        $data['topics_entered'] = num2friendly($data['topics_entered']);
+        $data['posts_read_count'] = num2friendly($data['posts_read_count']);
+        $data['likes_given'] = num2friendly($data['likes_given']);
+        $data['likes_received'] = num2friendly($data['likes_received']);
+        $data['post_count'] = num2friendly($data['post_count']);
+        $data['solved_count'] = num2friendly($data['solved_count']);
+
+        //设置背景颜色
+        $bg_color = 'rgba(34, 34, 34, 1)';
+        //设置文字颜色
+        $color = 'rgba(211, 211, 211, 1)';
+
+        if ($theme == 'light') {
+            $bg_color = 'rgba(255, 255, 255, 1)';
+            $color = 'rgba(34, 34, 34, 1)';
+        }
+
+        $loader = new FilesystemLoader(app_path('view/api'));
+        $twig = new Environment($loader, [
+            'cache'       => false,
+            'auto_reload' => true,
+            'debug'       => true
+        ]);
+        $svg = $twig->render('v2.twig', [
+            'bg_color' => $bg_color,
+            'color'    => $color,
+            'data'     => $data
+        ]);
+        return response($svg, 200, ['Content-Type' => 'image/svg+xml']);
     }
 }
