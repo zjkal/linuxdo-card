@@ -104,6 +104,9 @@ class ApiController
         if ($theme == 'light') {
             $bg_color = 'rgba(255, 255, 255, 1)';
             $color = 'rgba(34, 34, 34, 1)';
+        } elseif ($theme == 'auto') {
+            $bg_color = 'rgba(0, 0, 0, 0)';
+            $color = 'rgba(135, 138, 153, 1)';
         }
 
         $loader = new FilesystemLoader(app_path('view/api'));
