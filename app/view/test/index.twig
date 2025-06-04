@@ -2,39 +2,28 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>手动跨域获取 JSON（需先访问 linux.do）</title>
+  <title>通过 iframe 访问受 Cloudflare 保护的 JSON</title>
+  <style>
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <h2>步骤：</h2>
+  <h2>手动步骤：</h2>
   <ol>
-    <li><a href="https://linux.do/u/zjkal/summary.json" target="_blank">点击这里先访问一次 JSON 链接</a>（完成 Cloudflare 验证）</li>
-    <li>然后点击下面按钮加载数据</li>
+    <li>浏览器自动加载目标 JSON 页面（下方 iframe）</li>
+    <li>用户可以手动选中内容复制</li>
+    <li>或者点击“在新窗口中打开”以通过 Cloudflare 验证</li>
   </ol>
 
-  <button onclick="loadJson()">点击加载数据</button>
-  <pre id="output">尚未加载</pre>
-
-  <script>
-    async function loadJson() {
-      const url = "https://linux.do/u/zjkal/summary.json";
-
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          credentials: "include", // 带上 cookie
-        });
-
-        const contentType = response.headers.get("content-type") || "";
-        if (!contentType.includes("application/json")) {
-          throw new Error("服务器返回的不是 JSON，可能是验证页面");
-        }
-
-        const data = await response.json();
-        document.getElementById("output").textContent = JSON.stringify(data, null, 2);
-      } catch (err) {
-        document.getElementById("output").textContent = "请求失败: " + err;
-      }
-    }
-  </script>
+  <iframe src="https://linux.do/u/zjkal/summary.json" sandbox></iframe>
+  <br>
+  <button onclick="window.open('https://linux.do/u/zjkal/summary.json', '_blank')">在新窗口中打开 JSON</button>
 </body>
 </html>
